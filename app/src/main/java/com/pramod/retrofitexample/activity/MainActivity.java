@@ -8,9 +8,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.pramod.retrofitexample.R;
-import com.pramod.retrofitexample.interfaces.JsonPlaceHolderApi;
+import com.pramod.retrofitexample.interfaces.ApiInterface;
 import com.pramod.retrofitexample.model.Comment;
 import com.pramod.retrofitexample.model.Post;
+import com.pramod.retrofitexample.retrofit.ApiClient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,31 +20,24 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView textView_Results;
     private Button button;
-    private JsonPlaceHolderApi jsonPlaceHolderApi;
     private ProgressDialog progressDialog;
+    private ApiInterface apiInterface;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        apiInterface = ApiClient.getInstance(this).create(ApiInterface.class);
+
         textView_Results = findViewById(R.id.text_view_results);
         button = findViewById(R.id.button);
-
-
-        // create instance of retrofit
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -59,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
                 // hitApi();
                 // getPosts();
                 // getPosts_Id();
-                 getPosts_Hash();
+                getPosts_Hash();
                 // getComments();
                 // getComments_Id();
-               // getComments_Url();
+                // getComments_Url();
                 createPosts_Hash();
             }
         });
@@ -77,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         fields.put("userId", "25");
         fields.put("title", "New Title");
 
-        Call<Post> call = jsonPlaceHolderApi.createPost_Hash(fields);
+        Call<Post> call = apiInterface.createPost_Hash(fields);
 
         call.enqueue(new Callback<Post>() {
             @Override
@@ -114,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         parameters.put("_sort", "id");
         parameters.put("_order", "desc");
 
-        Call<List<Post>> call = jsonPlaceHolderApi.getPosts_Hash(parameters);
+        Call<List<Post>> call = apiInterface.getPosts_Hash(parameters);
 
         call.enqueue(new Callback<List<Post>>() {
             @Override
@@ -149,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getComments_Url() {
-        Call<List<Comment>> call = jsonPlaceHolderApi.getComments_Url("posts/1/comments"  /*OR*/
+        Call<List<Comment>> call = apiInterface.getComments_Url("posts/1/comments"  /*OR*/
                 /*"https://jsonplaceholder.typicode.com/posts/1/comments"*/);
         call.enqueue(new Callback<List<Comment>>() {
             @Override
@@ -182,10 +176,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getPosts_Id() {
-        /*  Call<List<Post>> call = jsonPlaceHolderApi.getPosts_Id(3);*/                   //1. show data according userId
-        /*  Call<List<Post>> call = jsonPlaceHolderApi.getPosts_Id(1,4);*/                 //2. data between your choice
-        /*  Call<List<Post>> call = jsonPlaceHolderApi.getPosts_Id(3,"id","desc");*/       //3. show data according in desc order using Id
-        Call<List<Post>> call = jsonPlaceHolderApi.getPosts_Id(new Integer[]{2, 3, 6}, null, null);   //show data according which which userID
+        /*  Call<List<Post>> call = apiInterface.getPosts_Id(3);*/                   //1. show data according userId
+        /*  Call<List<Post>> call = apiInterface.getPosts_Id(1,4);*/                 //2. data between your choice
+        /*  Call<List<Post>> call = apiInterface.getPosts_Id(3,"id","desc");*/       //3. show data according in desc order using Id
+        Call<List<Post>> call = apiInterface.getPosts_Id(new Integer[]{2, 3, 6}, null, null);   //show data according which which userID
 
         call.enqueue(new Callback<List<Post>>() {
             @Override
@@ -216,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getComments_Id() {
-        Call<List<Comment>> call = jsonPlaceHolderApi.getComments_Id(3);
+        Call<List<Comment>> call = apiInterface.getComments_Id(3);
         call.enqueue(new Callback<List<Comment>>() {
             @Override
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
@@ -247,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getComments() {
-        Call<List<Comment>> call = jsonPlaceHolderApi.getComments();
+        Call<List<Comment>> call = apiInterface.getComments();
         call.enqueue(new Callback<List<Comment>>() {
             @Override
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
@@ -278,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getPosts() {
-        Call<List<Post>> call = jsonPlaceHolderApi.getPosts();
+        Call<List<Post>> call = apiInterface.getPosts();
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {

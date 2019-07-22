@@ -21,7 +21,7 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
-public interface JsonPlaceHolderApi {
+public interface ApiInterface {
 
     /***
      * get data from server then use GET
@@ -44,13 +44,9 @@ public interface JsonPlaceHolderApi {
               @Query("_sort") String sort,        //for sorting data by Id
               @Query("_desc") String order);      //for desc order data */
 
-            @Query("userId") Integer[] userId,  //show data according which which userID
-            @Query("_sort") String sort,        //for sorting data by Id
-            @Query("_desc") String order);      //for desc order data
-
-
-
-
+                                                          @Query("userId") Integer[] userId,  //show data according which which userID
+                                                          @Query("_sort") String sort,        //for sorting data by Id
+                                                          @Query("_desc") String order);      //for desc order data
 
 
     @GET("posts/1/comments")
